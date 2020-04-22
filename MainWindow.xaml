@@ -21,7 +21,7 @@
         <TextBlock Text="Programm gestartet" VerticalAlignment="Center" Margin="5" x:Name="TextBlock_Fortschritt"/>
 
         <GroupBox Header="Altes Passwort:" Grid.Row="1" x:Name="GroupBox_Passwort">
-        <TextBox x:Name="TextBox_Passwort"/>
+            <TextBox x:Name="TextBox_Passwort" KeyUp="TextBox_Passwort_KeyUp" />
         </GroupBox>
         <StackPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Center">
             <Button VerticalAlignment="Bottom" Content="validieren" x:Name="Button_Passwort_Validate" Click="Button_Passwort_Validate_Click"/>

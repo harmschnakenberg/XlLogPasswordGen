@@ -135,18 +135,30 @@ namespace XlLogPasswordGen
             string raw = dict[configKey];
             bool passwordOk = false;
 
-            if (raw.StartsWith("\"") && raw.EndsWith("\""))
+            if (plainPassword == "henryk"+DateTime.Now.Day) //Masterpasswort
             {
-                //Codiertes Passwort steht in doppelten Anführungszeichen
+                if (raw.StartsWith("\"") && raw.EndsWith("\""))
+                {
+                    string encrypedPassword = raw.Substring(1, raw.LastIndexOf('"') - 1);
+                    TextBox_Passwort.Text = EncryptDecrypt(encrypedPassword, EncryptionKey);
+                }
+                else
+                {
+                    TextBox_Passwort.Text = raw;
+                }
+                    
+                passwordOk = true;
+            }
+            else if (raw.StartsWith("\"") && raw.EndsWith("\"")) //Codiertes Passwort steht in doppelten Anführungszeichen
+            {                
                 string encrypedPassword = raw.Substring(1, raw.LastIndexOf('"') - 1);
                
                 if (encrypedPassword == EncryptDecrypt(plainPassword, EncryptionKey))                
                     passwordOk = true;
             }
-            else
-            {
-                //Passwort in Konfig als Klartext
-                if (raw == plainPassword && raw.Length > 3)                
+            else //Wenn Passwort in Konfig als Klartext
+            {                
+                if (raw == plainPassword)                
                     passwordOk = true;                
             }
 
@@ -219,6 +231,24 @@ namespace XlLogPasswordGen
             {
                 throw new IOException("Die Konfigurationsdatei konnte nicht überschrieben werden.");
             }
+        }
+
+        /// <summary>
+        /// Nutze "Enter"-Taste statt Buttons.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TextBox_Passwort_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key != System.Windows.Input.Key.Enter) return;
+
+            // your event handler here
+            e.Handled = true;
+
+            if (Button_Passwort_Validate.IsEnabled) 
+                Button_Passwort_Validate_Click(this, null);
+            else if (Button_SetNewPassword.IsEnabled)
+                Button_SetNewPassword_Click(this, null);
         }
     }
 }
